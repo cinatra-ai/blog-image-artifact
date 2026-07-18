@@ -40,7 +40,22 @@
           "@cinatra-ai/blog-image-artifact:blog-image-matcher"
         ]
       },
-      "matcherConfidenceThreshold": 0.7
+      "matcherConfidenceThreshold": 0.7,
+      "objectTypes": [
+        {
+          "type": "@cinatra-ai/blog-image-artifact:blog-image",
+          "claim": "dedicated",
+          "dispositions": {
+            "projection": "artifact-safe",
+            "pinnable": false,
+            "snapshotPolicy": "none",
+            "sensitivity": "normal"
+          },
+          "schema": {
+            "type": "object"
+          }
+        }
+      ]
     }
   }
 }

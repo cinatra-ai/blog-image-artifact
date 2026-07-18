@@ -19,6 +19,15 @@ import type { SemanticArtifactManifest } from "@cinatra-ai/sdk-extensions";
 // MIME scope: image/png, image/jpeg, image/webp (the multimodal-readable
 // raster set; SVG/GIF excluded — SVG is markup, animated GIF framing is
 // not reliably classifiable from a single representation).
+//
+// EXPLICIT TYPE DECLARATION (ratified entry 95, epic cinatra#1785). This pack
+// DECLARES the one object type it owns — `blog-image` — in `objectTypes`
+// rather than relying on the retired `<package>:artifact` umbrella derivation.
+// The matcher above classifies content INTO this explicitly declared type; it
+// does not create it. The type is self-namespaced (this package registers it),
+// so its inline schema is the permissive object shape a produced image row
+// carries; `dispositions.projection: "artifact-safe"` keeps context projection
+// to metadata (never the raw bytes). No `mode` field (not in the schema).
 export const blogImageArtifactManifest: SemanticArtifactManifest = {
   accepts: {
     file: {
@@ -29,4 +38,19 @@ export const blogImageArtifactManifest: SemanticArtifactManifest = {
     matchers: ["@cinatra-ai/blog-image-artifact:blog-image-matcher"],
   },
   matcherConfidenceThreshold: 0.7,
+  objectTypes: [
+    {
+      type: "@cinatra-ai/blog-image-artifact:blog-image",
+      claim: "dedicated",
+      dispositions: {
+        projection: "artifact-safe",
+        pinnable: false,
+        snapshotPolicy: "none",
+        sensitivity: "normal",
+      },
+      schema: {
+        type: "object",
+      },
+    },
+  ],
 };
