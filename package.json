@@ -1,11 +1,10 @@
 {
   "name": "@cinatra-ai/blog-image-artifact",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "Apache-2.0",
   "type": "module",
   "files": [
-    "src",
-    "skills"
+    "src"
   ],
   "main": "./src/index.ts",
   "types": "./src/index.ts",
@@ -24,7 +23,19 @@
     "roles": [
       "artifact-blog-image"
     ],
-    "dependencies": [],
+    "dependencies": [
+      {
+        "packageName": "@cinatra-ai/blog-image-matcher-skill",
+        "kind": "skill",
+        "role": "matcher",
+        "edgeType": "runtime",
+        "versionConstraint": {
+          "kind": "semver-range",
+          "range": "*"
+        },
+        "requirement": "required"
+      }
+    ],
     "artifact": {
       "accepts": {
         "file": {
@@ -37,7 +48,7 @@
       },
       "skills": {
         "matchers": [
-          "@cinatra-ai/blog-image-artifact:blog-image-matcher"
+          "@cinatra-ai/blog-image-matcher-skill:blog-image-matcher"
         ]
       },
       "matcherConfidenceThreshold": 0.7,
