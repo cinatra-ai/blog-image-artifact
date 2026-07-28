@@ -35,7 +35,7 @@ export const blogImageArtifactManifest: SemanticArtifactManifest = {
     },
   },
   skills: {
-    matchers: ["@cinatra-ai/blog-image-artifact:blog-image-matcher"],
+    matchers: ["@cinatra-ai/blog-image-matcher-skill:blog-image-matcher"],
   },
   matcherConfidenceThreshold: 0.7,
   objectTypes: [
