@@ -28,7 +28,7 @@ import {
 
 describe("the renderer-props contract copy", () => {
   it("carries the props ABI version the manifest entries declare", () => {
-    expect(ARTIFACT_RENDERER_PROPS_API_VERSION).toBe(1);
+    expect(ARTIFACT_RENDERER_PROPS_API_VERSION).toBe(2);
   });
 
   it("spells the ownership levels exactly as the contract does", () => {
@@ -52,7 +52,7 @@ describe("the renderer-props contract copy", () => {
     // This literal is the assertion: it fails the typecheck if this copy asks
     // for a field the host does not send, or spells a union the host does not.
     const snapshot: ArtifactRendererProps = {
-      propsApiVersion: 1,
+      propsApiVersion: 2,
       artifact: {
         id: "artifact-1",
         title: "A file",
@@ -75,6 +75,12 @@ describe("the renderer-props contract copy", () => {
         representationRevisionId: null,
         reason: "absent",
       },
+      // The island-scoped byte reference a v2 snapshot carries where there is an
+      // address to carry: optional, and its road is the two the host names.
+      bytes: { road: "island", preview: "https://example.test/p", download: null },
+      // The edit capability is REQUIRED on every snapshot the host builds, and
+      // every surface that is not the artifact's own page mints the refusal.
+      edit: { kind: "read-only", channelVersion: 1, reason: "read-only-surface" },
     };
     expect(snapshot.artifact.ownerLevel).toBe("user");
     expect(snapshot.identity.kind).toBe("extension");

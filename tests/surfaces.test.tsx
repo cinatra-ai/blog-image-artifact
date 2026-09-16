@@ -168,7 +168,14 @@ describe("the picture display floors, NAMED and never blank, rather than paintin
       "not-a-picture",
     ],
     [
-      props({ urls: { preview: null, download: null }, actions: { download: null, openInSource: null } }),
+      // BOTH ROADS CLEARED: at props v2 the host names the address a reader may
+      // fetch on the byte reference, so a snapshot that still carried one would
+      // have an address after all.
+      props({
+        urls: { preview: null, download: null },
+        actions: { download: null, openInSource: null },
+        bytes: { road: "session", preview: null, download: null },
+      }),
       "no-authorized-address",
     ],
   ];

@@ -89,7 +89,7 @@ export const blogImageArtifactManifest: SemanticArtifactManifest = {
     "renderers": {
       "detail": {
         "entry": "./src/renderers/detail.tsx",
-        "propsApiVersion": 1,
+        "propsApiVersion": 2,
         "representations": [
           "image/png",
           "image/jpeg",
@@ -98,7 +98,7 @@ export const blogImageArtifactManifest: SemanticArtifactManifest = {
       },
       "preview": {
         "entry": "./src/renderers/preview.tsx",
-        "propsApiVersion": 1,
+        "propsApiVersion": 2,
         "representations": [
           "image/png",
           "image/jpeg",
@@ -107,7 +107,7 @@ export const blogImageArtifactManifest: SemanticArtifactManifest = {
       },
       "listRow": {
         "entry": "./src/renderers/list-row.tsx",
-        "propsApiVersion": 1,
+        "propsApiVersion": 2,
         "representations": [
           "image/png",
           "image/jpeg",

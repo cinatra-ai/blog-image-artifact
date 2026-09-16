@@ -15,8 +15,11 @@
 // IS the request, which is exactly why the island-scoped byte capability is a
 // bearer in a URL. On the artifact page and the review card that address is the
 // first-party byte route; inside a third-party application it is the island's,
-// sealed to the one gate, artifact and revision the gate pinned. This display
-// tells the two apart by not caring: it paints what it was given, verbatim.
+// sealed to the one gate, artifact and revision the gate pinned. AT PROPS v2 the
+// host names that address on the byte reference and leaves its session routes on
+// `urls`, so this display reads the reference first and falls back to `urls`
+// only where the host carried none. It tells the two roads apart by not caring
+// which it was handed: it paints what the host named for this surface, verbatim.
 //
 // AND IT NEVER FETCHES, AND NEVER LINKS. A fetch carries no sealed URL and
 // paints nothing inside a third-party application; a link is a navigation, and
@@ -125,15 +128,31 @@ export function resolvePictureView(props: PictureRendererInput): PictureView {
     return floor("not-a-picture");
   }
 
-  // THE ADDRESS IS THE AUTHORIZATION. The host access-checked it before it built
-  // this snapshot; this display references it and alters nothing about it. The
-  // preview address is the inline one — the disposition is sealed by whoever
-  // minted the address, never chosen here.
+  // THE ADDRESS IS THE AUTHORIZATION, AND AT v2 THE BYTE REFERENCE NAMES IT.
+  // The host access-checked the address before it built this snapshot; this
+  // display references it and alters nothing about it. The preview address is
+  // the inline one — the disposition is sealed by whoever minted the address,
+  // never chosen here.
+  //
+  // WHICH ADDRESS, THOUGH. "A DISPLAY PAINTS FROM `bytes` WHERE IT IS PRESENT
+  // and falls back to `urls` where it is not" (the SDK leaf, on the v2
+  // island-scoped byte reference). `urls` are the host's SESSION byte routes,
+  // and "a subresource load from inside a third-party application carries no
+  // cookie — which is why a media display painting from them draws a blank
+  // plate there". So the byte reference is read FIRST, and where the host
+  // carries one it is the ONLY address: it is the host's own answer for the
+  // surface this reader is on, so a reference that names no preview is a named
+  // absence and floors here, never a licence to reach past it for a session
+  // route this surface cannot load. A snapshot carrying no reference at all is
+  // the ordinary first-party one, and `urls` speaks for it.
+  const byteReference = snapshot.bytes as { preview?: unknown } | null | undefined;
+  const carriesByteReference =
+    byteReference !== null && byteReference !== undefined && typeof byteReference === "object";
   const urls = snapshot.urls as { preview?: unknown } | null | undefined;
-  const src =
-    urls !== null && urls !== undefined && typeof urls === "object" && typeof urls.preview === "string"
-      ? urls.preview
-      : "";
+  const sessionPreview =
+    urls !== null && urls !== undefined && typeof urls === "object" ? urls.preview : undefined;
+  const address = carriesByteReference ? byteReference.preview : sessionPreview;
+  const src = typeof address === "string" ? address : "";
   if (src.length === 0) {
     return floor("no-authorized-address");
   }
