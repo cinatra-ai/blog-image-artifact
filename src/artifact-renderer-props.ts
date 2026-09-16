@@ -24,7 +24,42 @@
 
 import type { ArtifactContentProjection } from "./artifact-content-channel";
 
-export const ARTIFACT_RENDERER_PROPS_API_VERSION = 1;
+export const ARTIFACT_RENDERER_PROPS_API_VERSION = 2;
+
+/** Why the host did not grant the edit. Named, never blank. Copied from the
+ * leaf `@cinatra-ai/sdk-extensions/artifact-edit-channel` for the same single
+ * reason the props copy above gives. */
+export type ArtifactEditRefusal =
+  | "no-write-rights"
+  | "read-only-surface"
+  | "unsupported-form"
+  | "no-representation"
+  | "content-truncated";
+
+/**
+ * THE EDIT CAPABILITY, as it arrives on a display's props: a host-minted grant
+ * naming the base revision and where a change set goes, or a NAMED refusal.
+ *
+ * TYPES ONLY, and deliberately no road. The leaf carries the save call, its cap
+ * arithmetic and its sentence tables; this display is READ-ONLY on every surface
+ * it draws on, so it copies the shape the snapshot carries and none of the
+ * behaviour — exactly as the content-channel copy beside it does.
+ */
+export type ArtifactEditCapability =
+  | {
+      kind: "editable";
+      channelVersion: number;
+      artifactId: string;
+      baseRevisionId: string;
+      saveUrl: string;
+      idlePauseMs: number;
+      capBytes: number;
+    }
+  | {
+      kind: "read-only";
+      channelVersion: number;
+      reason: ArtifactEditRefusal;
+    };
 
 /** The canonical ownership-level projection, spelled out so it can be asserted. */
 export const ARTIFACT_OWNER_LEVELS = ["user", "team", "organization", "workspace"] as const;
@@ -86,4 +121,31 @@ export interface ArtifactRendererProps {
    * application, where reaching for bytes from the browser paints nothing.
    */
   content: ArtifactContentProjection;
+  /**
+   * THE ISLAND-SCOPED BYTE REFERENCE (props v2). The address the reader may
+   * actually fetch on the surface they are on: on the island a sealed,
+   * short-lived capability bound to exactly this artifact and this revision,
+   * and on a first-party surface the session route named as such.
+   *
+   * `urls` above are the host's SESSION byte routes, and a subresource load from
+   * inside a third-party application carries no cookie — which is why a media
+   * display painting from them draws a blank plate there.
+   *
+   * A DISPLAY PAINTS FROM `bytes` WHERE IT IS PRESENT and falls back to `urls`
+   * where it is not, and it never fetches a host route on its own.
+   *
+   * ABSENT AT v1: a display that declared v1 agreed to a snapshot without it.
+   */
+  bytes?: {
+    road: "session" | "island";
+    preview: string | null;
+    download: string | null;
+  };
+  /**
+   * THE EDIT CAPABILITY: either a host-minted grant or a NAMED refusal. Every
+   * surface that mounts a display says which — the artifact page mints a grant
+   * for a reader with write rights, and every other surface, the review card
+   * and the list row above all, mints a refusal.
+   */
+  edit: ArtifactEditCapability;
 }

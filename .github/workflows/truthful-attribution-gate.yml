@@ -2,8 +2,10 @@ name: truthful-attribution-gate
 # Thin caller for the org-reusable truthful-attribution-gate (cinatra-ai/ci),
 # per the ratified truthful-attribution spec. WARN mode
 # (rollout): findings are annotated, the check is ALWAYS green —
-# it never fails a PR. No .github/gate-suite.json committed (WARN scope exercises
-# presence + the human arm; the gate-suite arm is not exercised without a suite).
+# it never fails a PR. .github/gate-suite.json IS committed here (suite
+# blog-image-artifact-core), so the engine reads the committed suite: this repo's
+# highRiskPaths are superset-checked against the central defaults and a declared
+# Gate-suite arm is verified against it, alongside the presence and human arms.
 # Pinned to the immutable engine SHA proven green in cinatra ENFORCE today; this
 # is ci `main` HEAD (8eede102), one commit AHEAD of ci's current release tag — so
 # NO release-tag marker comment is appended to the `uses:` line below (a tag marker

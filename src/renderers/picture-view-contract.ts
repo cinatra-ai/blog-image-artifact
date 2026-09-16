@@ -10,8 +10,18 @@ import type { ArtifactRendererProps } from "../artifact-renderer-props";
 
 /** The props-contract version this display declares, and the only one it accepts
  * a snapshot at. The manifest entries declare the same number, and the host
- * resolves the display and builds the snapshot at it. */
-export const PICTURE_DISPLAY_PROPS_API_VERSION = 1;
+ * resolves the display and builds the snapshot at it.
+ *
+ * IT FOLLOWS THE SDK'S CURRENT VERSION, which is 2
+ * (`ARTIFACT_RENDERER_PROPS_API_VERSION` in
+ * `@cinatra-ai/sdk-extensions/artifact-renderer-props`: "IT IS 2 SINCE WAVE 3
+ * of `PLAN: Agents Lifecycle (D) - Review`"). Declaring 1 was not a smaller
+ * agreement, it was a different one: the host narrows a snapshot to the version
+ * a display negotiated ONLY where the surface passes it through that seam, and
+ * the row surface hands the display the snapshot it built at its own ceiling.
+ * A display that read only 1 therefore floored on a live, readable artifact in
+ * the row while the same artifact drew on its own page. */
+export const PICTURE_DISPLAY_PROPS_API_VERSION = 2;
 
 /** The picture forms this extension accepts, and the only ones it will draw. */
 export const PICTURE_FORMS = ["image/png", "image/jpeg", "image/webp"] as const;
