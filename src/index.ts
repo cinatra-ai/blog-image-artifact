@@ -78,44 +78,9 @@ export const blogImageArtifactManifest: SemanticArtifactManifest = {
     },
   ],
 
-  // THE DISPLAYS THIS EXTENSION SHIPS, declared for its OWN type and published
-  // through this package's own `exports` at the key the host's manifest
-  // generator derives from each entry. Mirrors the `cinatra` block in
-  // package.json, which is the manifest of record; the manifest test keeps the
-  // two in agreement.
-  ui: {
-    "abiVersion": 1,
-    "sdkAbiRange": "^2.5.0",
-    "renderers": {
-      "detail": {
-        "entry": "./src/renderers/detail.tsx",
-        "propsApiVersion": 2,
-        "representations": [
-          "image/png",
-          "image/jpeg",
-          "image/webp"
-        ]
-      },
-      "preview": {
-        "entry": "./src/renderers/preview.tsx",
-        "propsApiVersion": 2,
-        "representations": [
-          "image/png",
-          "image/jpeg",
-          "image/webp"
-        ]
-      },
-      "listRow": {
-        "entry": "./src/renderers/list-row.tsx",
-        "propsApiVersion": 2,
-        "representations": [
-          "image/png",
-          "image/jpeg",
-          "image/webp"
-        ]
-      }
-    }
-  },
+  // NO DISPLAY OF ITS OWN: this extension registers no renderer for any slot.
+  // A blog image is drawn by the host's image display, like every other image
+  // artifact.
 };
 
 export {
@@ -129,7 +94,3 @@ export {
   type ArtifactContentClass,
   ARTIFACT_CONTENT_CHANNEL_VERSION,
 } from "./artifact-content-channel";
-
-// TYPES ONLY, from the module that reaches nothing. The displays themselves are
-// imported at their own published subpaths.
-export type { PictureView, PictureFloorReason } from "./renderers/picture-view-contract";

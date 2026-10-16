@@ -1,9 +1,9 @@
-// THE VERSIONED SERVER CONTENT CHANNEL, as this display reads it.
+// THE VERSIONED SERVER CONTENT CHANNEL, as a display reads it.
 //
 // The content a display draws arrives ON ITS PROPS, read from the pinned
 // revision on the server and capped there: a display switches on `kind`, never
 // infers a class from a mime, and never fetches. `none` is a first-class answer
-// carrying a NAMED reason, which is why this display can always say what it is
+// carrying a NAMED reason, which is why a display can always say what it is
 // showing or why it is not.
 //
 // THE SOURCE OF TRUTH IS THE SDK LEAF `@cinatra-ai/sdk-extensions/artifact-content-channel`.
@@ -15,7 +15,7 @@
 // Replace it with a type-only import from the leaf as soon as the SDK resolves
 // from a standalone repository.
 
-/** The projection ABI version this display understands. A projection built at
+/** The projection ABI version a display understands. A projection built at
  * another version is refused rather than read at the wrong shape. */
 export const ARTIFACT_CONTENT_CHANNEL_VERSION = 1;
 

@@ -41,8 +41,8 @@ export type ArtifactEditRefusal =
  * naming the base revision and where a change set goes, or a NAMED refusal.
  *
  * TYPES ONLY, and deliberately no road. The leaf carries the save call, its cap
- * arithmetic and its sentence tables; this display is READ-ONLY on every surface
- * it draws on, so it copies the shape the snapshot carries and none of the
+ * arithmetic and its sentence tables; this package has no display of its own,
+ * so it copies the shape the snapshot carries and none of the
  * behaviour — exactly as the content-channel copy beside it does.
  */
 export type ArtifactEditCapability =
