@@ -1,18 +1,10 @@
 import { defineConfig } from "vitest/config";
 
-// jsdom and the automatic JSX runtime (matching the tsconfig `jsx: "react-jsx"`)
-// stay the suite defaults. This package carries no display of its own, so no
-// suite mounts one.
-//
-// NO SANITIZER ALIAS HERE: this package renders no markup from content, so it
-// reaches no sanitizer and carries none.
+// The suites read the manifest and the contract copies; none mounts a display,
+// because this package carries no display of its own.
 export default defineConfig({
-  esbuild: {
-    jsx: "automatic",
-    jsxImportSource: "react",
-  },
   test: {
-    environment: "jsdom",
+    environment: "node",
     include: ["tests/**/*.test.{ts,tsx}"],
     exclude: ["**/node_modules/**"],
   },

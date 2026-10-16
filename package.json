@@ -13,9 +13,7 @@
     ".": "./src/index.ts"
   },
   "peerDependencies": {
-    "@cinatra-ai/sdk-extensions": "*",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "@cinatra-ai/sdk-extensions": "*"
   },
   "peerDependenciesMeta": {
     "@cinatra-ai/sdk-extensions": {
@@ -96,14 +94,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.1.0",
     "@types/node": "^22.10.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "jsdom": "^26.0.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "typescript": "^5.6.3",
     "vitest": "^4.0.0"
   }

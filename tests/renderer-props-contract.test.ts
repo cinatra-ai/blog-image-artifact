@@ -27,7 +27,7 @@ import {
 } from "../src/artifact-renderer-props";
 
 describe("the renderer-props contract copy", () => {
-  it("carries the props ABI version the manifest entries declare", () => {
+  it("carries the SDK's current props ABI version", () => {
     expect(ARTIFACT_RENDERER_PROPS_API_VERSION).toBe(2);
   });
 

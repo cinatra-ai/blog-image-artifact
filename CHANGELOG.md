@@ -6,6 +6,11 @@ this file is the human reading of what each of those versions changed.
 
 ## 0.1.3 — 2026-09-16
 
+- The extension no longer carries a display of its own: a blog image is drawn
+  by the host's image display, like every other image artifact. The manifest
+  declares no `ui` block, the package publishes only its root, and the React
+  peers go with the display. The display changes listed below were superseded
+  by this before the version was released.
 - The displays read the props version the host builds a snapshot at today
   (`ARTIFACT_RENDERER_PROPS_API_VERSION` 2), and the three manifest entries
   declare it. The list row floored a live, readable artifact for its version —
