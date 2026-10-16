@@ -1,12 +1,11 @@
 import { defineConfig } from "vitest/config";
 
-// jsdom so the display entries can be MOUNTED in a real DOM — the picture is
-// drawn as a subresource load, and only a real element carries one. The
-// automatic JSX runtime matches the tsconfig `jsx: "react-jsx"`.
+// jsdom and the automatic JSX runtime (matching the tsconfig `jsx: "react-jsx"`)
+// stay the suite defaults. This package carries no display of its own, so no
+// suite mounts one.
 //
-// NO SANITIZER ALIAS HERE, unlike the fleet's text displays: this package draws
-// bytes through a host-authorized address and renders no markup from content,
-// so it reaches no sanitizer and carries none.
+// NO SANITIZER ALIAS HERE: this package renders no markup from content, so it
+// reaches no sanitizer and carries none.
 export default defineConfig({
   esbuild: {
     jsx: "automatic",

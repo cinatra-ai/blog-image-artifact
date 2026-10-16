@@ -1,24 +1,27 @@
 // @vitest-environment node
-// ACCEPTANCE 2, second half — THE BLOG-IMAGE TYPE'S DATA NAMES ITS POST AND ITS
-// PLACEMENT, and the display is published for this extension's own type.
+// THE BLOG-IMAGE TYPE'S DATA NAMES ITS POST AND ITS PLACEMENT, and the extension
+// registers NO display of its own.
 //
 // THE PLAN'S SENTENCE, VERBATIM (§8.2): "The blog-image type declares two
 // fields on its object type — the post artifact and the placement". The type
-// declared NOTHING at all before this wave: a bare `{ type: "object" }` with no
+// declared NOTHING at all before: a bare `{ type: "object" }` with no
 // properties, in both the manifest of record and the typed source manifest.
 //
-// THE PLACEMENT'S ONE VALUE. The plan's own row wrote "(featured or body)"; the
-// issue's later ruling settles it: "The pipeline makes one picture, the featured
-// image. ... There are no body pictures." The enum therefore admits `featured`
-// and nothing else — a schema that admitted a body picture would declare data
-// the pipeline is ruled never to make.
+// THE PLACEMENT'S ONE VALUE. The pipeline makes one picture, the featured image;
+// there are no body pictures. The enum therefore admits `featured` and nothing
+// else — a schema that admitted a body picture would declare data the pipeline
+// is ruled never to make.
+//
+// NO DISPLAY OF ITS OWN. A blog image is drawn by the host's image display, like
+// every other image artifact. The manifest of record and the typed manifest
+// carry no `ui` block, the package publishes no display entry, and the source
+// tree holds no display module.
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-import { PICTURE_DISPLAY_PROPS_API_VERSION } from "../src/renderers/picture-view";
 import { blogImageArtifactManifest } from "../src/index";
 
 const pkg = JSON.parse(
@@ -33,11 +36,7 @@ const pkg = JSON.parse(
   cinatra: {
     artifact: {
       accepts: { file: { mimeTypes: string[] } };
-      ui: {
-        abiVersion: number;
-        sdkAbiRange: string;
-        renderers: Record<string, { entry: string; propsApiVersion: number; representations?: string[] }>;
-      };
+      ui?: unknown;
       objectTypes: Array<{
         type: string;
         claim: string;
@@ -54,13 +53,15 @@ const pkg = JSON.parse(
 
 const MIMES = ["image/png", "image/jpeg", "image/webp"];
 const OWN_TYPE = "@cinatra-ai/blog-image-artifact:blog-image";
-const ARTIFACT_UI_RENDERER_ALLOWED_KEYS = new Set(["entry", "propsApiVersion", "representations"]);
-
-function generatorExportsKeyForEntry(entry: string): string {
-  return `./${entry.replace(/^\.\//, "").replace(/\.(ts|tsx)$/, "")}`;
-}
+const SRC = fileURLToPath(new URL("../src/", import.meta.url));
 
 const claim = () => pkg.cinatra.artifact.objectTypes.find((c) => c.type === OWN_TYPE);
+
+function sourceFiles(dir: string): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((d) =>
+    d.isDirectory() ? sourceFiles(`${dir}${d.name}/`) : [`${dir}${d.name}`],
+  );
+}
 
 describe("the blog-image type declares its post and its placement", () => {
   it("still claims exactly the one dedicated type this extension owns", () => {
@@ -85,69 +86,48 @@ describe("the blog-image type declares its post and its placement", () => {
     expect(claim()?.schema.required?.slice().sort()).toEqual(["placement", "post"]);
   });
 
-  it("keeps the typed src manifest in agreement with package.json", () => {
-    expect(blogImageArtifactManifest.objectTypes).toEqual(pkg.cinatra.artifact.objectTypes);
-    expect(blogImageArtifactManifest.ui).toEqual(pkg.cinatra.artifact.ui);
-    expect(blogImageArtifactManifest.accepts).toEqual(pkg.cinatra.artifact.accepts);
-  });
-});
-
-describe("the display is declared for this extension's own type", () => {
-  it("declares a strict v1 ui block bound to the generated host SDK ABI range", () => {
-    expect(pkg.cinatra.artifact.ui.abiVersion).toBe(1);
-    expect(pkg.cinatra.artifact.ui.sdkAbiRange).toBe("^2.5.0");
-  });
-
-  it("ships the three slots the three surfaces mount, each naming its own entry", () => {
-    const renderers = pkg.cinatra.artifact.ui.renderers;
-    expect(Object.keys(renderers).sort()).toEqual(["detail", "listRow", "preview"]);
-    expect(renderers.detail.entry).toBe("./src/renderers/detail.tsx");
-    expect(renderers.preview.entry).toBe("./src/renderers/preview.tsx");
-    expect(renderers.listRow.entry).toBe("./src/renderers/list-row.tsx");
-  });
-
-  it("draws only the picture forms this extension itself accepts — no wildcard", () => {
+  it("accepts only the picture forms it names — no wildcard", () => {
     expect(pkg.cinatra.artifact.accepts.file.mimeTypes).toEqual(MIMES);
-    for (const renderer of Object.values(pkg.cinatra.artifact.ui.renderers)) {
-      expect(renderer.representations).toEqual(MIMES);
-      for (const form of renderer.representations ?? []) {
-        expect(form.includes("*")).toBe(false);
-        expect(MIMES).toContain(form);
-      }
+  });
+
+  it("keeps the typed src manifest in agreement with package.json", () => {
+    expect(blogImageArtifactManifest).toEqual(pkg.cinatra.artifact);
+  });
+});
+
+describe("the extension registers no display of its own", () => {
+  it("declares no ui block in the manifest of record or the typed manifest", () => {
+    expect(pkg.cinatra.artifact.ui).toBeUndefined();
+    expect("ui" in pkg.cinatra.artifact).toBe(false);
+    expect(blogImageArtifactManifest.ui).toBeUndefined();
+    expect("ui" in blogImageArtifactManifest).toBe(false);
+  });
+
+  it("publishes the package root and no display entry", () => {
+    expect(Object.keys(pkg.exports)).toEqual(["."]);
+    for (const target of Object.values(pkg.exports)) {
+      expect(target.includes("renderers")).toBe(false);
     }
   });
 
-  it("declares the props version the display actually accepts a snapshot at", () => {
-    for (const renderer of Object.values(pkg.cinatra.artifact.ui.renderers)) {
-      expect(renderer.propsApiVersion).toBe(PICTURE_DISPLAY_PROPS_API_VERSION);
-      for (const k of Object.keys(renderer)) {
-        expect(ARTIFACT_UI_RENDERER_ALLOWED_KEYS.has(k)).toBe(true);
-      }
-    }
-  });
-
-  it("requests NO host ports — a v1 display renders from the snapshot alone", () => {
-    for (const renderer of Object.values(pkg.cinatra.artifact.ui.renderers)) {
-      expect(Object.keys(renderer).sort()).toEqual(["entry", "propsApiVersion", "representations"]);
+  it("holds no display module in its source tree", () => {
+    expect(existsSync(`${SRC}renderers`)).toBe(false);
+    for (const file of sourceFiles(SRC)) {
+      expect(file.endsWith(".tsx")).toBe(false);
+      const text = readFileSync(file, "utf8");
+      expect(text).not.toMatch(/\brenderers\s*:/);
+      expect(text).not.toMatch(/\bui\s*:\s*\{/);
     }
   });
 });
 
-describe("the display is published by the package itself", () => {
+describe("the package keeps its shape", () => {
   it("declares an exports subpath map, never a bare sugar target and never a pattern", () => {
     expect(typeof pkg.exports).toBe("object");
     expect(Array.isArray(pkg.exports)).toBe(false);
     for (const key of Object.keys(pkg.exports)) {
       expect(key.startsWith(".")).toBe(true);
       expect(key.includes("*")).toBe(false);
-    }
-  });
-
-  it("publishes EVERY declared display at the generator's key", () => {
-    for (const renderer of Object.values(pkg.cinatra.artifact.ui.renderers)) {
-      const key = generatorExportsKeyForEntry(renderer.entry);
-      expect(Object.keys(pkg.exports)).toContain(key);
-      expect(pkg.exports[key]).toBe(renderer.entry);
     }
   });
 
@@ -165,7 +145,7 @@ describe("the display is published by the package itself", () => {
     }
   });
 
-  it("carries no picture library of its own — the bytes are painted, never parsed", () => {
+  it("carries no picture library of its own", () => {
     const named = [
       ...Object.keys((pkg as unknown as { dependencies?: Record<string, string> }).dependencies ?? {}),
     ];
